@@ -192,6 +192,90 @@ z <- function(x){
 	plot(test[2:100])
   print(min(test[2:100]))	
 }
+
+
+v <- function(){
+  virusbomb <- z(1)
+  mydata = read.table("data.txt", header = TRUE)
+  myclasse = read.table("classe.txt", header = TRUE)
+  myDataClasse = cbind(mydata,myclasse[,2])
+  mySortData <- myDataClasse[order(myDataClasse[,3]),]
+  mySortData
+  m <- matrix(nrow = 2,ncol = 3)
+  test<-0
+  entropyMeanO<- virusbomb[2]
+  entropyMean1<-Inf
+  entropyMean2<- 0
+  indexReturn <-1
+  for(i in virusbomb[1]:99){
+    m[1,1] = sum(mySortData[virusbomb[1]:i,8]=="c1")
+    m[1,2] = sum(mySortData[virusbomb[1]:i,8]=="c2")
+    m[1,3] = sum(mySortData[virusbomb[1]:i,8]=="c3")
+    j<-i+1
+    m[2,1] = sum(mySortData[j:100,8]=="c1")
+    m[2,2] = sum(mySortData[j:100,8]=="c2")
+    m[2,3] = sum(mySortData[j:100,8]=="c3")
+    if(m[1,1]==0){
+      lg1<- 0
+    }else{
+      lg1<- log2((m[1,1]/100))
+    }
+    if(m[1,2]==0){
+      lg2<- 0
+    }else{
+      lg2<- log2((m[1,2]/100))
+    }
+    if(m[1,3]==0){
+      lg3<- 0
+    }else{
+      lg3<- log2((m[1,3]/100))
+    }
+    
+    if(m[2,1]==0){
+      lg21<- 0
+    }else{
+      lg21<- log2((m[2,1]/100))
+    }
+    if(m[2,2]==0){
+      lg22<- 0
+    }else{
+      lg22<- log2((m[2,2]/100))
+    }
+    if(m[2,3]==0){
+      lg23<- 0
+    }else{
+      lg23<- log2((m[2,3]/100))
+    }
+    
+    entropyNewL1 = -((m[1,1]/100)*lg1+
+                       (m[1,2]/100)*lg2+
+                       (m[1,3]/100)*lg3)
+    entropyNewL2 = -((m[2,1]/100)*lg21+
+                       (m[2,2]/100)*lg22+
+                       (m[2,3]/100)*lg23)
+    
+    entropyMean2 = ((sum(m[1,])/100)*entropyNewL1+(sum(m[2,])/100)*entropyNewL2)
+    print(sum(m[1,]))
+    print(sum(m[2,]))
+    test<-c(test,entropyMean)
+    print("------")
+    print(entropyNewL1)
+    print(entropyNewL2)
+    print(entropyMean1)
+    print("------")
+    print(entropyMeanO)
+    if(entropyMean1>entropyMean2){
+      entropyMean1= entropyMean2	
+      indexReturn=indexReturn+1
+    }else{
+      print(m)
+      return(c(indexReturn-1,entropyMeanO))
+    }
+    #reste a calculer l'entropie du dernier segment
+  }
+}
+
+
 h <- function(){
 	mydata = read.table("data.txt", header = TRUE)
 	myclasse = read.table("classe.txt", header = TRUE)
